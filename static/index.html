@@ -9,7 +9,7 @@
     <input id="search" type="text" placeholder="Search"/>
     <button id="btn">Search</button>
     <pre>
-        <code id="code"/>
+        <code id="code"></code>
     </pre>
     <script>
         const btn = document.getElementById('btn')
@@ -18,15 +18,20 @@
 
         btn.addEventListener("click", async () => {
             code.innerText = "loading.."
+            try {
+                const res = await fetch(
+                    '/get?search=' + encodeURIComponent(search.value)
+                );
 
-            const res = await fetch(
-                '/get?search=' + encodeURIComponent(search.value)
-            );
+                const json = await res.json();
 
-            const json = await res.json();
-
-            code.innerText = "\n" + JSON.stringify(json, null, 4)
+                code.innerText = "\n" + JSON.stringify(json, null, 4)
+            }
+            catch(err) {
+                code.innerText = err.message
+                console.log(err)
+            }
         })
-    </script>>
+    </script>
 </body>
 </html>
